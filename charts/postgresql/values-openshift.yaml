@@ -1,6 +1,10 @@
 global:
   storageClass: crc-csi-hostpath-provisioner
 
+auth:
+  enablePostgresUser: true
+  postgresPassword: postgres
+
 primary:
   podSecurityContext:
     enabled: false
@@ -9,6 +13,12 @@ primary:
   persistence:
     enabled: true
     size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
 
 volumePermissions:
   enabled: true

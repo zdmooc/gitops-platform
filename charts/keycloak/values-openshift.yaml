@@ -12,6 +12,11 @@ auth:
 
 postgresql:
   enabled: true
+  auth:
+    postgresPassword: postgres
+    username: keycloak
+    password: keycloak
+    database: keycloak
   primary:
     podSecurityContext:
       enabled: false
@@ -19,3 +24,10 @@ postgresql:
       enabled: false
   volumePermissions:
     enabled: true
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    memory: 1Gi
