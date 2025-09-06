@@ -13,6 +13,7 @@ spec:
     chart: postgresql
     targetRevision: "*"
     helm:
+      releaseName: postgresql
       values: |
         auth:
           postgresPassword: postgres
@@ -30,14 +31,12 @@ spec:
                   END IF;
                 END $$;
                 CREATE DATABASE keycloak OWNER keycloak;
-
                 DO $$ BEGIN
                   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='odm_tomcat') THEN
                     CREATE ROLE odm_tomcat LOGIN PASSWORD 'odm_tomcat';
                   END IF;
                 END $$;
                 CREATE DATABASE odm_tomcat OWNER odm_tomcat;
-
                 DO $$ BEGIN
                   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='odm_liberty') THEN
                     CREATE ROLE odm_liberty LOGIN PASSWORD 'odm_liberty';
@@ -46,5 +45,4 @@ spec:
                 CREATE DATABASE odm_liberty OWNER odm_liberty;
   syncPolicy:
     automated: {}
-    syncOptions:
-      - CreateNamespace=true
+    syncOptions: [CreateNamespace=true]

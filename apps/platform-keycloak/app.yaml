@@ -13,6 +13,7 @@ spec:
     chart: keycloak
     targetRevision: "*"
     helm:
+      releaseName: keycloak
       values: |
         production: false
         auth:
@@ -33,5 +34,4 @@ spec:
           tls: false
   syncPolicy:
     automated: {}
-    syncOptions:
-      - CreateNamespace=true
+    syncOptions: [CreateNamespace=true]
