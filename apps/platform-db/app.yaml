@@ -44,5 +44,7 @@ spec:
                 END $$;
                 CREATE DATABASE odm_liberty OWNER odm_liberty;
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions: [CreateNamespace=true]

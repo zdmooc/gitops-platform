@@ -33,5 +33,7 @@ spec:
           hostname: keycloak-platform-keycloak.apps-crc.testing
           tls: false
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions: [CreateNamespace=true]
