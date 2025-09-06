@@ -25,3 +25,5 @@ volumePermissions:
 
 shmVolume:
   enabled: true
+
+podAnnotations: {}

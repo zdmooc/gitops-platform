@@ -13,18 +13,9 @@ spec:
     targetRevision: main
     path: charts/postgresql
     helm:
-      releaseName: postgresql
-      values: |-
-        global:
-          storageClass: crc-csi-hostpath-provisioner
-        auth:
-          postgresPassword: postgres
-        primary:
-          persistence:
-            size: 1Gi
-        volumePermissions:
-          enabled: true
+      valueFiles:
+        - values-openshift.yaml
   syncPolicy:
     automated: {}
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true

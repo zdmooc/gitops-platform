@@ -25,6 +25,8 @@ postgresql:
   volumePermissions:
     enabled: true
 
+podAnnotations: {}
+
 resources:
   requests:
     cpu: 200m

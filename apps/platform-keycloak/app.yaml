@@ -13,20 +13,9 @@ spec:
     targetRevision: main
     path: charts/keycloak
     helm:
-      releaseName: keycloak
-      values: |-
-        auth:
-          adminUser: admin
-          adminPassword: admin
-        proxy: edge
-        postgresql:
-          enabled: true
-          global:
-            storageClass: crc-csi-hostpath-provisioner
-          primary:
-            persistence:
-              size: 1Gi
+      valueFiles:
+        - values-openshift.yaml
   syncPolicy:
     automated: {}
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
