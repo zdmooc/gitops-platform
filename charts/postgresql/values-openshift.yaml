@@ -1,0 +1,17 @@
+global:
+  storageClass: crc-csi-hostpath-provisioner
+
+primary:
+  podSecurityContext:
+    enabled: false
+  containerSecurityContext:
+    enabled: false
+  persistence:
+    enabled: true
+    size: 5Gi
+
+volumePermissions:
+  enabled: true
+
+shmVolume:
+  enabled: true

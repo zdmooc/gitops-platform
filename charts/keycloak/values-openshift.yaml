@@ -1,0 +1,21 @@
+global:
+  storageClass: crc-csi-hostpath-provisioner
+
+podSecurityContext:
+  enabled: false
+containerSecurityContext:
+  enabled: false
+
+auth:
+  adminUser: admin
+  adminPassword: admin
+
+postgresql:
+  enabled: true
+  primary:
+    podSecurityContext:
+      enabled: false
+    containerSecurityContext:
+      enabled: false
+  volumePermissions:
+    enabled: true
