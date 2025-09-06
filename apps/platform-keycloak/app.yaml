@@ -9,31 +9,24 @@ spec:
     server: https://kubernetes.default.svc
     namespace: platform-keycloak
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: keycloak
-    targetRevision: "*"
+    repoURL: https://github.com/zdmooc/gitops-platform.git
+    targetRevision: main
+    path: charts/keycloak
     helm:
       releaseName: keycloak
-      values: |
-        production: false
+      values: |-
         auth:
           adminUser: admin
           adminPassword: admin
-        externalDatabase:
-          host: postgresql.platform-db.svc.cluster.local
-          port: 5432
-          user: keycloak
-          password: keycloak
-          database: keycloak
         proxy: edge
-        service:
-          type: ClusterIP
-        ingress:
+        postgresql:
           enabled: true
-          hostname: keycloak-platform-keycloak.apps-crc.testing
-          tls: false
+          global:
+            storageClass: crc-csi-hostpath-provisioner
+          primary:
+            persistence:
+              size: 1Gi
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions: [CreateNamespace=true]
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
