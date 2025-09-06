@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-keycloak
+  namespace: openshift-gitops
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-keycloak
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: keycloak
+    targetRevision: "*"
+    helm:
+      values: |
+        production: false
+        auth:
+          adminUser: admin
+          adminPassword: admin
+        externalDatabase:
+          host: postgresql.platform-db.svc.cluster.local
+          port: 5432
+          user: keycloak
+          password: keycloak
+          database: keycloak
+        proxy: edge
+        service:
+          type: ClusterIP
+        ingress:
+          enabled: true
+          hostname: keycloak-platform-keycloak.apps-crc.testing
+          tls: false
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true

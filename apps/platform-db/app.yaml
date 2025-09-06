@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-postgres
+  namespace: openshift-gitops
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-db
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: "*"
+    helm:
+      values: |
+        auth:
+          postgresPassword: postgres
+        primary:
+          persistence:
+            enabled: true
+            size: 5Gi
+            storageClass: crc-csi-hostpath-provisioner
+          initdb:
+            scripts:
+              00-multi-db.sql: |
+                DO $$ BEGIN
+                  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='keycloak') THEN
+                    CREATE ROLE keycloak LOGIN PASSWORD 'keycloak';
+                  END IF;
+                END $$;
+                CREATE DATABASE keycloak OWNER keycloak;
+
+                DO $$ BEGIN
+                  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='odm_tomcat') THEN
+                    CREATE ROLE odm_tomcat LOGIN PASSWORD 'odm_tomcat';
+                  END IF;
+                END $$;
+                CREATE DATABASE odm_tomcat OWNER odm_tomcat;
+
+                DO $$ BEGIN
+                  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='odm_liberty') THEN
+                    CREATE ROLE odm_liberty LOGIN PASSWORD 'odm_liberty';
+                  END IF;
+                END $$;
+                CREATE DATABASE odm_liberty OWNER odm_liberty;
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
