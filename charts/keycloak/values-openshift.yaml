@@ -1,31 +1,43 @@
 global:
   storageClass: crc-csi-hostpath-provisioner
 
+# Pas de contraintes strictes (SCC gérés côté OpenShift)
 podSecurityContext:
   enabled: false
 containerSecurityContext:
   enabled: false
 
+replicaCount: 1
+
 auth:
   adminUser: admin
   adminPassword: admin
 
+# ❌ Désactive le sous-chart Postgres embarqué
 postgresql:
-  enabled: true
-  auth:
-    postgresPassword: postgres
-    username: keycloak
-    password: keycloak
-    database: keycloak
-  primary:
-    podSecurityContext:
-      enabled: false
-    containerSecurityContext:
-      enabled: false
-  volumePermissions:
-    enabled: true
+  enabled: false
 
-podAnnotations: {}
+# ✅ Base externe (Postgres dans platform-db)
+externalDatabase:
+  host: platform-postgres-postgresql.platform-db.svc.cluster.local
+  port: 5432
+  user: keycloak
+  database: keycloak
+  existingSecret: keycloak-db
+  existingSecretPasswordKey: password
+
+service:
+  type: ClusterIP
+  ports:
+    http: 80
+
+# Keycloak derrière route/ingress => mode proxy "edge"
+proxy: edge
+httpRelativePath: ""
+
+# Pas de PVC pour Keycloak (config dans la DB)
+persistence:
+  enabled: false
 
 resources:
   requests:
@@ -33,3 +45,11 @@ resources:
     memory: 512Mi
   limits:
     memory: 1Gi
+
+metrics:
+  enabled: false
+
+ingress:
+  enabled: false
+
+podAnnotations: {}
